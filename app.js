@@ -1,6 +1,9 @@
 const {createConnection} = require("mysql2/promise");
 const leer = require("prompt-sync")();
 
+/**
+ * Inicia el programa
+ */
 async function main() {
     let opcion = 0;
     const conexionDB = await CreaConexion();
@@ -21,13 +24,20 @@ async function main() {
 
 
 main();
-
+/**
+ * Muestra la planilla/
+*/
 function MostrarPlanilla() {
     console.log("Planilla");
     console.log("\t1 - Ver repuestos");
     console.log("\t2 - Ver un repuesto");
 }
 
+
+/**
+ * Crea la conexion con la base de datos
+ * @returns la conexion con la base de datos
+ */
 async function CreaConexion() {
     return await createConnection({
         host: "localhost",
