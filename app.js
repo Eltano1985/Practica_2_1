@@ -8,14 +8,26 @@ async function main() {
     let opcion = 0;
     const conexionDB = await CreaConexion();
     MostrarPlanilla();
-    opcion = leer();
+    opcion = Number(leer());
+        switch (opcion) {
+        case 1:
+            const infoRepuestos = await conexionDB.query("SELECT * FROM repuestos");
+            console.table(infoRepuestos[0]);
+            break;
+        case 2:
+            console.log("Ingrese el id del repuesto que quiere ver");
+            const idRepuesto = Number(leer());
+            const infoRepuesto = await conexionDB.query("SELECT * FROM repuestos WHERE id = ?", [idRepuesto]);
+            console.table(infoRepuesto[0]);
+            break;
+        default:
+            console.log("opcion no reconocida");
+                        break;
+    }
     
     
     
-    const respuesta = await conexionDB.query("SELECT * FROM repuestos");
-    const respuesta2 = await conexionDB.query("SELECT * FROM repuestos WHERE id = 3")
-    console.table(respuesta[0]);
-    console.table(respuesta2[0]);
+   
     
 
     
