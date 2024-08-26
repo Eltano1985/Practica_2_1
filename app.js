@@ -9,7 +9,20 @@ async function main() {
     const conexionDB = await CreaConexion();
     MostrarPlanilla();
     opcion = Number(leer());
-        switch (opcion) {
+    await ejecutarOpcion(opcion, conexionDB);
+    await conexionDB.end();
+}
+
+
+main();
+/**
+ * Ejecuta la opcion ingresada por el usuario
+ * @param {Number} opcion ingresada por el usuario
+ * @param {Object} conexionDB creada para usar la base de datos
+ */
+
+async function ejecutarOpcion(opcion, conexionDB) {
+    switch (opcion) {
         case 1:
             const infoRepuestos = await conexionDB.query("SELECT * FROM repuestos");
             console.table(infoRepuestos[0]);
@@ -22,20 +35,10 @@ async function main() {
             break;
         default:
             console.log("opcion no reconocida");
-                        break;
+            break;
     }
-    
-    
-    
-   
-    
-
-    
-    await conexionDB.end();
 }
 
-
-main();
 /**
  * Muestra la planilla/
 */
