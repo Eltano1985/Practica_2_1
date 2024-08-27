@@ -5,6 +5,7 @@ const OPC_SALIR = 0;
 const OPC_VER_REPUESTOS = 1;
 const OPC_VER_REPUESTO = 2;
 const OPC_ELIMINAR_REPUESTO = 3;
+const OPC_AGREGAR_REPUESTO = 4;
 
 /**
  * Inicia el programa
@@ -50,6 +51,12 @@ async function ejecutarOpcion(opcion, conexionDB) {
             const idRepuestoEliminar = Number(leer());
             const infoRepuestoEliminar = await conexionDB.query("DELETE FROM repuestos WHERE id = ?", [idRepuestoEliminar]);
             console.log(infoRepuestoEliminar[0].affecedRows ? "Repuesto eliminado":"No se pudo eliminar el repuesto");
+            break;
+        case OPC_AGREGAR_REPUESTO:
+            console.log("Ingrese el id del repuesto que quiere agregar");
+            const idRepuestoAgregado = Number(leer());
+            const infoRepuestoAgregado = await conexionDB.query("INSERT INTO repuestos (nombre, precio, marca, stock) VALUES (String, Number, String, Number)");
+            console.table(infoRepuestoAgregado[0]);
             
         default:
             console.log("opcion no reconocida");
@@ -65,6 +72,8 @@ function MostrarPlanilla() {
     console.log("\t1 - Ver repuestos");
     console.log("\t2 - Ver un repuesto");
     console.log("\t3 - Eliminar un repuesto");
+    console.log("\t4 - Agregar un repuesto");
+    
     
     console.log("\t0 - Salir");
     
