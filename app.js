@@ -1,20 +1,32 @@
 const {createConnection} = require("mysql2/promise");
 const leer = require("prompt-sync")();
 
+const OPC_SALIR = 0;
+const OPC_VER_REPUESTOS = 1;
+const OPC_VER_REPUESTO = 2;
+const OPC_ELIMINAR_REPUESTO = 3;
+
 /**
  * Inicia el programa
  */
 async function main() {
-    let opcion = 0;
+    let opcion = OPC_SALIR;
     const conexionDB = await CreaConexion();
-    MostrarPlanilla();
-    opcion = Number(leer());
-    await ejecutarOpcion(opcion, conexionDB);
+
+    do {
+        MostrarPlanilla();
+        opcion = Number(leer());
+        console.log("opcion ingresada "+ isNaN(opcion) +" " + opcion);
+        
+        await ejecutarOpcion(opcion, conexionDB);
+    } while (opcion || isNaN(opcion));
+
     await conexionDB.end();
 }
 
 
 main();
+
 /**
  * Ejecuta la opcion ingresada por el usuario
  * @param {Number} opcion ingresada por el usuario
@@ -23,16 +35,22 @@ main();
 
 async function ejecutarOpcion(opcion, conexionDB) {
     switch (opcion) {
-        case 1:
+        case OPC_VER_REPUESTOS:
             const infoRepuestos = await conexionDB.query("SELECT * FROM repuestos");
             console.table(infoRepuestos[0]);
             break;
-        case 2:
+        case OPC_VER_REPUESTO:
             console.log("Ingrese el id del repuesto que quiere ver");
             const idRepuesto = Number(leer());
             const infoRepuesto = await conexionDB.query("SELECT * FROM repuestos WHERE id = ?", [idRepuesto]);
             console.table(infoRepuesto[0]);
             break;
+        case OPC_ELIMINAR_REPUESTO:
+            console.log("Ingrese el id del repuesto que quiere eliminar");
+            const idRepuestoEliminar = Number(leer());
+            const infoRepuestoEliminar = await conexionDB.query("DELETE FROM repuestos WHERE id = ?", [idRepuestoEliminar]);
+            console.log(infoRepuestoEliminar[0].affecedRows ? "Repuesto eliminado":"No se pudo eliminar el repuesto");
+            
         default:
             console.log("opcion no reconocida");
             break;
@@ -46,6 +64,10 @@ function MostrarPlanilla() {
     console.log("Planilla");
     console.log("\t1 - Ver repuestos");
     console.log("\t2 - Ver un repuesto");
+    console.log("\t3 - Eliminar un repuesto");
+    
+    console.log("\t0 - Salir");
+    
 }
 
 
